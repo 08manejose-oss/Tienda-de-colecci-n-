@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: #333;
+            color: #000;
+        }
+        header {
+            background: #000;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+       .logo {
+            font-size: 10px;
+            font-weight: bold;
+        }
+       .carrito-btn {
+            background: #FF1100;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+       .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+       .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+       .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+       .card:hover {
+            transform: translateY(-5px);
+        }
+       .card-img{
+           width: 100%;
+           height: 200px;
+           background: #FFF;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           overflow: hidden;
+       }
+       .car-img img{
+           whidth: 100%
+           height: 100%
+           objet-fit: cover
+       }
+       .card-body {
+            padding: 15px;
+        }
+       .card-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+       .card-precio {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+       .btn-add {
+            width: 100%;
+            padding: 12px;
+            background: #FF1100;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+       .btn-quitar {
+            width: 100%;
+            padding: 12px;
+            background: #7f8c8d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+       .btn-add:hover {
+            background: #c0392b;
+        }
+       .btn-quitar:hover {
+            background: #c0392b;
+        }
+        #carrito-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+       .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #000;
+        }
+       .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+       .cerrar {
+            font-size: 28px;
+            cursor: pointer;
+        }
+       .item-carrito {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+       .total {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: right;
+        }
+       .btn-comprar {
+            width: 100%;
+            padding: 12px;
+            background: #FF1100;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+       .btn-cancelar {
+            width: 100%;
+            padding: 12px;
+            background: #7f8c8d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+       .menu {
+            background-color: #000;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+       .menu ul {
+            list-style: none;
+        }
+       .menu a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="JM.png" alt="mini perfil de la empresa" width="70" height="70">
+        <p>Elige tus compras</p>
+        <button class="carrito-btn" onclick="abrirCarrito()">
+            Carrito (<span id="contador">0</span>)
+        </button>
+    </header>
+
+    <div class="container">
+        <h1>Productos en Venta</h1>
+        <div class="productos" id="lista-productos"></div>
+    </div>
+
+    <!-- Modal Carrito -->
+    <div id="carrito-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tu Carrito</h2>
+                <span class="cerrar" onclick="cerrarCarrito()">&times;</span>
+            </div>
+            <div id="items-carrito"></div>
+            <div class="total">Total: $<span id="total">0</span> MXN</div>
+            <button class="btn-comprar" onclick="comprar()">Finalizar Compra</button>
+            <button class="btn-cancelar" onclick="cancelar()">Cancelar Compra</button>
+        </div>
+    </div>
+
+    <script>
+        const productos = [
+            { id: 1, nombre: "TOYOTA PRIUS CUSTOM / PERSONNALISE", precio: 30, img: "toyota.jpg"},
+            { id: 2, nombre: "MACH SPEEDER", precio: 30, img: "mach.jpg" },
+            { id: 3, nombre: "HAKO TYPE D™", precio: 30, img: "hako.jpg" },
+            { id: 4, nombre: "'20 JEEP, GLADIATOR", precio: 30, img: "jeep.jpg" },
+            { id: 5, nombre: "SPIDER-MOBILE", precio: 30, img: "spider.jpg"},
+            { id: 6, nombre: "24/SEVEN", precio: 35, img: "seven.jpg"},
+            { id: 7, nombre: "BMW M4 GT3", precio: 35, img: "bmw.jpg"},
+            { id: 8, nombre: "MAZDA MX-5 MIATA", precio: 35, img: "mazda.jpg"},
+            { id: 9, nombre: "LAMBORGHINI CENTENARIO", precio: 30, img: "centenario.jpg"},
+            { id: 10, nombre: "POLESTAR TRX", precio: 35, img: "polestar.jpg"}
+        ];
+
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+        function cargarProductos() {
+            const contenedor = document.getElementById('lista-productos');
+            contenedor.innerHTML = '';
+            productos.forEach(p => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <div class="card-img"><img src="${p.img}" alt="${p.nombre}"width="145" height="200"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">${p.nombre}</h3>
+                            <p class="card-precio">$${p.precio.toLocaleString()} MXN</p>
+                            <button class="btn-add" onclick="agregarAlCarrito(${p.id})">Agregar al carrito</button>
+                            <button class="btn-quitar" onclick="quitarDelCarrito(${p.id})">Quitar del carrito</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function agregarAlCarrito(id) {
+            const producto = productos.find(p => p.id === id);
+            const existe = carrito.find(item => item.id === id);
+
+            if (existe) {
+                existe.cantidad++;
+            } else {
+                carrito.push({...producto, cantidad: 1});
+            }
+            actualizarCarrito();
+        }
+
+        function quitarDelCarrito(id) {
+            const index = carrito.findIndex(item => item.id === id);
+            if (index!== -1) {
+                carrito[index].cantidad--;
+                if (carrito[index].cantidad <= 0) {
+                    carrito.splice(index, 1);
+                }
+            }
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            const contador = document.getElementById('contador');
+            const itemsDiv = document.getElementById('items-carrito');
+            const totalSpan = document.getElementById('total');
+
+            let total = 0;
+            let cantidadTotal = 0;
+            itemsDiv.innerHTML = '';
+
+            carrito.forEach(item => {
+                total += item.precio * item.cantidad;
+                cantidadTotal += item.cantidad;
+                itemsDiv.innerHTML += `
+                    <div class="item-carrito">
+                        <span>${item.nombre} x${item.cantidad}</span>
+                        <span>$${(item.precio * item.cantidad).toLocaleString()}</span>
+                    </div>
+                `;
+            });
+
+            contador.textContent = cantidadTotal;
+            totalSpan.textContent = total.toLocaleString();
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+        }
+
+        function abrirCarrito() {
+            document.getElementById('carrito-modal').style.display = 'flex';
+        }
+
+        function cerrarCarrito() {
+            document.getElementById('carrito-modal').style.display = 'none';
+        }
+
+        function comprar() {
+            if (carrito.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            alert('¡Gracias por tu compra! Total: $' + document.getElementById('total').textContent + ' MXN');
+            carrito = [];
+            actualizarCarrito();
+            cerrarCarrito();
+        }
+
+        function cancelar() {
+            if (carrito.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            alert('Su compra ha sido cancelada');
+            carrito = [];
+            actualizarCarrito();
+            cerrarCarrito();
+         }
+
+        cargarProductos();
+    </script>
+
+    <footer class="menu">
+        <ul>
+            <li><a href="/storage/emulated/0/Android/data/com.teejay.trebedit/files/TrebEdit user files/Proyecto de muestra - Acme/Proyecto Shadow/Venta 3.html">Ver más</a></li>
+        </ul>
+    </footer>
+
+</body>
+</html>
